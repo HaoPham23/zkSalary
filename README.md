@@ -1,70 +1,79 @@
-# Getting Started with Create React App
+Advisors: Nguyen Duy Hieu, Nguyen Anh Khoa
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# zkSalary
+This is an application for people to give a Groth16-based zero-knowledge proof to any party for proving the statement: "My salary meets your requirements!", without revealing the exact salary. 
 
-## Available Scripts
+Questions:
 
-In the project directory, you can run:
+- WHY do we need zero-knowledge? Salary is one of the most sensitive pieces of information. Many companies consider salary revealing as the most misconducted behaviors.
+- WHEN do we use this app? We can give this proof to any party (like banks or credit card providers) whenever they ask you to prove your income.
+- HOW can we prove? By using Groth16 protocol.
 
-### `npm start`
+## Design
+### Scenario
+Suppose you're working for a company.
+You need to open credit card in a Bank. In order for the Bank to provide a credit limit, you need to prove that your salary in a desired range (say between 1 million and 4 millions). 
+You can just provide your employment contract (which is very sensitive) to prove your existence in company together with the salary.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+But you can do it better! You can prove your existence in the company, and your salary is between 1 and 4 millions, without providing a specific number!
+### My solution
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+There are 3 parties: Company (C), You (Y) and the Bank (B):
 
-### `npm test`
+- C: the HR of this company can maintain a Merkle Tree, which contains hashed pairs (identifier, salary) of all employers. HR then public the root to everyone. 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Y: You can request C to provide a Merkle Proof for your existence in C's Merkle Tree. Using Groth16 protocol, you can generate zero-knowledge proof and provide to B.
 
-### `npm run build`
+- B: The bank receive Y's proof and verify.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+.... not yet
+## Development
+I have just designed the circuit and provided an unit test. 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Guide
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Compile the circuit
+Make sure you have installed `circom` and `snarkjs`
 
-### `npm run eject`
+```sh
+cd circuits_zkSalary
+circom salary.circom --r1cs --wasm
+```
+### Run a trusted setup
+I used [`powersOfTau28_hez_final_16.ptau`](https://hermez.s3-eu-west-1.amazonaws.com/powersOfTau28_hez_final_16.ptau) to generate Groth16 parameters, this can support a circuit has up to $2^{16} = 65.536$ constraints.  
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```sh
+snarkjs groth16 setup salary.r1cs powersOfTau28_hez_final_16.ptau salary.zkey
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+snarkjs zkey export verificationkey salary.zkey ../server/veri_key.json
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Generate a proof
+To generate an example proof, you can run `node test.js` in `server` folder (make sure you have installed all modules in `test.js` using `npm install`). 
 
-## Learn More
+You can create your own input to calculate the witness, then create a proof. To do so, first store your input data in `input.json` in folder `salary_js`, move to this folder and then run this command to generate a proof:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```sh
+snarkjs g16f input.json salary.wasm ../salary.zkey proof.json public.json
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The `input.json` contains: 
 
-### Code Splitting
+1. `identifier`: Your identifier in company
+2. `salary`: your salary
+3. `lower`: the lowerbound of your salary
+4. `upper`: the upperbound of your salary
+5. `root`: the root of your company's Merkle Tree
+6. `pathElements`: your Merkle Proof nodes
+7. `pathIndices`: your Merkle Proof indices (0: left, 1: right)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The proof will prove that I am working in a company with a  `salary` such that `lower <= salary <= upper`.
 
-### Analyzing the Bundle Size
+### Verify the proof
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```sh
+snarkjs g16v ../../server/veri_key.json public.json proof.json
+```
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
