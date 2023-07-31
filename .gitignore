@@ -25,5 +25,3 @@ yarn-error.log*
 powersOfTau28_hez_final_16.ptau
 *.r1cs
 *.wtns
-proof.json
-public.json

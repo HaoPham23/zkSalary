@@ -20,14 +20,12 @@ async function test1() {
     let a = mimc.F.toString(mimc.multiHash([input["identifier"],input["salary"]]));
     tree.insert(a);
     input["root"] = tree.root;
-    console.log(input["root"]);
+    // console.log(input["root"]);
     path = tree.path(tree.indexOf(a));
     input["pathIndices"] = path["pathIndices"];
     input["pathElements"] = path["pathElements"];
-    console.log(input["pathIndices"]);
-    console.log(input["pathElements"]);
     let start = new Date();
-    const proof  =  await snarkjs.groth16.fullProve(input,"../circuits_zkSalary/salary_js/salary.wasm","../circuits_zkSalary/salary.zkey" );
+    const proof  =  await snarkjs.groth16.fullProve(input,"../circuits/salary_js/salary.wasm","../circuits/salary.zkey" );
     let end = new Date();
     let timeElapsed = end-start;
     console.log("Time to gen proof test 1 :" + timeElapsed/1000);

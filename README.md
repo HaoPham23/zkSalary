@@ -36,31 +36,22 @@ I have just designed the circuit and provided an unit test.
 Make sure you have installed `circom` and `snarkjs`
 
 ```sh
-cd circuits_zkSalary
+cd circuits
 circom salary.circom --r1cs --wasm
 ```
 ### Run a trusted setup
-I used [`powersOfTau28_hez_final_16.ptau`](https://hermez.s3-eu-west-1.amazonaws.com/powersOfTau28_hez_final_16.ptau) to generate Groth16 parameters, this can support a circuit has up to $2^{16} = 65.536$ constraints.  
-
+Download [`powersOfTau28_hez_final_16.ptau`](https://hermez.s3-eu-west-1.amazonaws.com/powersOfTau28_hez_final_16.ptau).
 
 ```sh
+cd circuits
 snarkjs groth16 setup salary.r1cs powersOfTau28_hez_final_16.ptau salary.zkey
-
-snarkjs zkey export verificationkey salary.zkey ../server/veri_key.json
+snarkjs zkey export verificationkey salary.zkey veri_key.json
 ```
 
 ### Generate a proof
-To generate an example proof, you can run `node test.js` in `server` folder (make sure you have installed all modules in `test.js` using `npm install`). 
+Store your input signals in `./circuits/input.json`, which contains:
 
-You can create your own input to calculate the witness, then create a proof. To do so, first store your input data in `input.json` in folder `salary_js`, move to this folder and then run this command to generate a proof:
-
-```sh
-snarkjs g16f input.json salary.wasm ../salary.zkey proof.json public.json
-```
-
-The `input.json` contains: 
-
-1. `identifier`: Your identifier in company
+1. `identifier`: your identifier in company
 2. `salary`: your salary
 3. `lower`: the lowerbound of your salary
 4. `upper`: the upperbound of your salary
@@ -68,12 +59,29 @@ The `input.json` contains:
 6. `pathElements`: your Merkle Proof nodes
 7. `pathIndices`: your Merkle Proof indices (0: left, 1: right)
 
+Perform Groth16 full prove (includes create witness):
+
+```sh
+cd circuits
+snarkjs g16f input.json ./salary_js/salary.wasm salary.zkey proof.json public.json
+```
+
+<!-- The `input.json` contains: 
+
+1. `identifier`: Your identifier in company
+2. `salary`: your salary
+3. `lower`: the lowerbound of your salary
+4. `upper`: the upperbound of your salary
+5. `root`: the root of your company's Merkle Tree
+6. `pathElements`: your Merkle Proof nodes
+7. `pathIndices`: your Merkle Proof indices (0: left, 1: right) -->
+
 The proof will prove that I am working in a company with a  `salary` such that `lower <= salary <= upper`.
 
 ### Verify the proof
 
 ```sh
-snarkjs g16v ../../server/veri_key.json public.json proof.json
+snarkjs g16v veri_key.json public.json proof.json
 ```
 
-
+*Note:* Check out `./circuits/example` for example.
