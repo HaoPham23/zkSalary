@@ -41,7 +41,7 @@ body {
 }
 
 .main-title {
-  padding-top: 10rem;
+  padding-top: 8rem;
   font-size: 5rem;
   /* font-family: 'Fascinate', cursive; */
   /* text-transform: uppercase; */
@@ -85,9 +85,22 @@ form {
   display: inline-block;
   background: #f3f3f3;
   border: 1px solid #ddd;
-  border-radius: 2px;
+  border-radius: 5px;
   padding: 2rem;
   margin: 2rem 0 1rem 0
+}
+
+.proof {
+  display: block;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 2rem;
+  /* margin: 2rem 0 1rem 0; */
+  width: 500px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 form label {
@@ -127,7 +140,8 @@ input {
 
 footer p {
   margin: 0;
-  font-size: .9rem
+  font-size: .9rem;
+  color: #f1f1f1;
 }
 
 /***    Register Page     ***/
