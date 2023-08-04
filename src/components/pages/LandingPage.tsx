@@ -7,7 +7,7 @@ function LandingPage() {
   return (
     <header style={HeaderStyle}>
       <h1 className="main-title text-center">zkSalary</h1>
-      <p className="main-para text-center">reveal nothing</p>
+      <p className="main-para text-center">Your Salary, Your Privacy!</p>
       <div className="buttons text-center">
         <Link to="/login">
           <button className="primary-button" id="reg_btn">

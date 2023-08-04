@@ -15,9 +15,9 @@ const verifyProof = async (_verificationkey: string, signals: any, proof: any) =
 const Verifier: React.FC = () => {
   const [isValid, setIsValid] = useState(false);
   const [formVerify, setFormVerify] = useState({
-    identifier: '',
-    lower: '',
-    upper: '',
+    // identifier: '',
+    // lower: '',
+    // upper: '',
     proof: '',
     publicSignals: '',
     });
@@ -32,7 +32,8 @@ const Verifier: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formVerify);
-    const { identifier, lower, upper, proof, publicSignals} = formVerify;
+    // const { identifier, lower, upper, proof, publicSignals} = formVerify;
+    const {proof, publicSignals} = formVerify;
     const _proof = JSON.parse(proof);
     const _signals = JSON.parse(publicSignals);
     verifyProof(verificationKey, _signals, _proof).then((_isValid) => {
@@ -44,21 +45,21 @@ const Verifier: React.FC = () => {
     <div className="text-center">
       <h2 className="main-title">Verify</h2>
       <form action="/home" method="post" onSubmit={handleSubmit}>
-        <p>
+        {/* <p>
           <label>Identifier</label>
           <br />
           <input type="text" name="identifier" value={formVerify.identifier} onChange={handleChange} required />
-        </p>
-        <p>
+        </p> */}
+        {/* <p>
           <label>Lowerbound</label>
           <br />
           <input type="text" name="lower" value={formVerify.lower} onChange={handleChange} required />
-        </p>
-        <p>
+        </p> */}
+        {/* <p>
           <label>Upperbound</label>
           <br />
           <input type="text" name="upper" value={formVerify.upper} onChange={handleChange} required />
-        </p>
+        </p> */}
         <p>
           <label>Proof</label>
           <br />
@@ -73,13 +74,16 @@ const Verifier: React.FC = () => {
           <button id="sub_btn" type="submit">Verify</button>
         </p>
       </form>
+      {formVerify.proof.length > 0 && (
       <div>
-        <label style={{ color: 'white' }}>Verify Result</label>
-        <div className="proof">
-            <br />
-            <p>{isValid ? "Valid proof" : "Invalid proof"}</p>
-        </div>
+      <label style={{ color: 'white' }}>Verify Result</label>
+      <div className="verify">
+          <br />
+          <p>{isValid ? "Valid proof" : "Invalid proof"}</p>
       </div>
+      </div>
+        )}
+
       <footer>
         <Link to="/"><p>Back to Homepage.</p></Link>
       </footer>

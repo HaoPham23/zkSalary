@@ -8,7 +8,7 @@ import Prover from './components/pages/Prover';
 import Verifier from './components/pages/Verifier';
 
 import './App.css';
-import BackgroundImage from './assets/images/bg.png';
+import BackgroundImage from './assets/images/bg.jpg';
 
 function App() {
   return (
@@ -31,7 +31,8 @@ const AppStyle = {
   height: '100vh',
   background: `url(${BackgroundImage})`,
   backgroundPosition: 'center',
-  backgroundSize: 'cover',
+  backgroundSize: 'contain',
+  overflow: 'scroll'
 };
 
 export default App;

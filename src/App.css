@@ -25,7 +25,9 @@ body {
   margin-right: 1rem;
   padding: .6rem;
   width: 10rem;
-  background: #222;
+  border-radius: 5px;
+  /* background: #222; */
+  background: rgba(59,130,246,.5);
   border: none;
   color: #fff;
   font-size: 1.2rem;
@@ -98,6 +100,19 @@ form {
   padding: 2rem;
   /* margin: 2rem 0 1rem 0; */
   width: 500px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.verify {
+  display: block;
+  background-color: white;
+  /* border: 1px solid #ccc; */
+  border-radius: 5px;
+  /* padding: 2rem; */
+  margin: 2rem 0 1rem 0;
+  width: 100px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-left: auto;
   margin-right: auto;
