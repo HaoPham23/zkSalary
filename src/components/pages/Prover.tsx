@@ -22,7 +22,7 @@ const Prover: React.FC = () => {
     const [signals, setSignals] = useState<string>('');
     const wasmFile = 'http://localhost:8000/salary_js/salary.wasm';
     const zkeyFile = 'http://localhost:8000/salary.zkey';
-    const verificationKey = 'http://localhost:8000/veri_key.json';
+    
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -91,7 +91,7 @@ const Prover: React.FC = () => {
             <p>
             <label>Upperbound (VND)</label>
             <br />
-            <input type="number" name="upper" value={formData.upper} onChange={handleChange} required />
+            <input type="text" name="upper" value={formData.upper} onChange={handleChange} required />
             </p>
             <p>
             <button id="sub_btn" type="submit">Prove</button>
