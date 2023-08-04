@@ -1,28 +1,35 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import LandingPage from './components/pages/LandingPage';
 import LoginPage from './components/pages/LoginPage';
 import HomePage from './components/pages/HomePage';
 import Prover from './components/pages/Prover';
 import Verifier from './components/pages/Verifier';
-
+import Add from './components/pages/Add';
+import { AuthProvider } from './auth/AuthContext';
 import './App.css';
 import BackgroundImage from './assets/images/bg.jpg';
+import PrivateRoutes from './utils/ProtectedRoutes';
 
 function App() {
   return (
+    <AuthProvider>
     <BrowserRouter>
       <div style={AppStyle}>
         <Routes>
           <Route path="/" element={<LandingPage/>} />
           <Route path="/login" element={<LoginPage/>} />
-          <Route path="/home" element={<HomePage/>} />
+          {/* <Route path="/home" element={<HomePage/>} /> */}
+          <Route element={<PrivateRoutes/>}>
+            <Route path='/home' element={<HomePage/>}/>
+            <Route path="/home/add" element={<Add/>} />
+          </Route>
           <Route path="/prove" element={<Prover/>} />
           <Route path="/verify" element={<Verifier/>} />
+          
         </Routes>
       </div>
     </BrowserRouter>
+    </AuthProvider>
   );
 };
 

@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { AuthContext } from '../../auth/AuthContext';
 import '../../App.css';
 
-const SignInPage: React.FC = () => {
+const LogInPage: React.FC = () => {
+  const { setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
   const [formLogin, setFormLogin] = useState({
     company: '',
     password: '',
     });
-  const [isValid, setIsValid] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormLogin((prevData) => ({
@@ -21,10 +21,8 @@ const SignInPage: React.FC = () => {
     e.preventDefault();
     console.log(formLogin);
     if (formLogin.company === 'VNG' && formLogin.password === '1') {
-      setIsValid(true);
-    }
-    if (isValid === true) {
-      navigate('/home');
+      setAuth({token: true});
+      navigate("/home");
     }
     // const { identifier, lower, upper, proof, publicSignals} = formVerify;
   }
@@ -53,4 +51,4 @@ const SignInPage: React.FC = () => {
   );
 };
 
-export default SignInPage;
+export default LogInPage;
