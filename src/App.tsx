@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from './components/pages/LandingPage';
-import LoginPage from './components/pages/LoginPage';
-import HomePage from './components/pages/HomePage';
-import Prover from './components/pages/Prover';
-import Verifier from './components/pages/Verifier';
-import Add from './components/pages/Add';
+import LoginPage from './components/CompanyApp/LoginPage';
+import HomePage from './components/CompanyApp/HomePage';
+import Prover from './components/ProveApp/Prover';
+import Verifier from './components/VerifyApp/Verifier';
+import Add from './components/CompanyApp/Add';
 import { AuthProvider } from './auth/AuthContext';
 import './App.css';
 import BackgroundImage from './assets/images/bg.jpg';

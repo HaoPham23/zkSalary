@@ -1,27 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import { QrReader } from 'react-qr-reader';
 import '../../App.css';
-const snarkjs = require('snarkjs');
-
-const verifyProof = async (_verificationkey: string, signals: any, proof: any) => {
-	const vkey = await fetch(_verificationkey).then(function (res) {
-		return res.json();
-	});
-	const res = await snarkjs.groth16.verify(vkey, signals, proof);
-	return res;
-};
+import Scanner from './Scanner';
 
 const Verifier: React.FC = () => {
+  const [data, setData] = useState('No result');
+  const [errorMsg, setErrorMsg] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [formVerify, setFormVerify] = useState({
-    // identifier: '',
-    // lower: '',
-    // upper: '',
     proof: '',
     publicSignals: '',
     });
-  const verificationKey = 'http://localhost:8000/veri_key.json';
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormVerify((prevData) => ({
@@ -31,35 +21,48 @@ const Verifier: React.FC = () => {
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formVerify);
     // const { identifier, lower, upper, proof, publicSignals} = formVerify;
     const {proof, publicSignals} = formVerify;
     const _proof = JSON.parse(proof);
     const _signals = JSON.parse(publicSignals);
-    verifyProof(verificationKey, _signals, _proof).then((_isValid) => {
-      setIsValid(_isValid);
-      console.log(_isValid);
-    });
+    fetch('http://localhost:8000/verify', {
+      method: 'POST',
+      body: JSON.stringify({"proof": _proof, "signals": _signals}),
+      headers: {
+        'Content-type': 'application/json',
+      },
+    })
+    .then((response) => response.json())
+    .then((json) => {
+      if (json["result"] === true) {
+        setIsValid(true);
+        setData(JSON.stringify(json["data"]));
+      } else {
+        setIsValid(false);
+        console.log(json["msg"]);
+        setErrorMsg(json["msg"]);
+      }
+    })
   }
+
+  const handleScan = result => {
+    try {
+      var proofAndSignals = JSON.parse(result);
+
+      setFormVerify(prevFormVerify => ({
+        ...prevFormVerify,
+        proof: proofAndSignals["proof"],
+        publicSignals: proofAndSignals["signals"]
+      }));
+    } catch {
+      setIsValid(false);
+    }
+  };
+
   return (
     <div className="text-center">
       <h2 className="main-title">Verify</h2>
       <form action="/home" method="post" onSubmit={handleSubmit}>
-        {/* <p>
-          <label>Identifier</label>
-          <br />
-          <input type="text" name="identifier" value={formVerify.identifier} onChange={handleChange} required />
-        </p> */}
-        {/* <p>
-          <label>Lowerbound</label>
-          <br />
-          <input type="text" name="lower" value={formVerify.lower} onChange={handleChange} required />
-        </p> */}
-        {/* <p>
-          <label>Upperbound</label>
-          <br />
-          <input type="text" name="upper" value={formVerify.upper} onChange={handleChange} required />
-        </p> */}
         <p>
           <label>Proof</label>
           <br />
@@ -83,7 +86,12 @@ const Verifier: React.FC = () => {
       </div>
       </div>
         )}
-
+      <Scanner onScan={handleScan}/>
+      <p className='proof'>{data}</p>
+      {errorMsg.length > 0 && (
+        <p className='proof'>{errorMsg}
+        </p>
+      )}
       <footer>
         <Link to="/"><p>Back to Homepage.</p></Link>
       </footer>
