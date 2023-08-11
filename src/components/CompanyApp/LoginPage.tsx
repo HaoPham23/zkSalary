@@ -4,10 +4,11 @@ import { AuthContext } from '../../auth/AuthContext';
 import '../../App.css';
 
 const LogInPage: React.FC = () => {
-  const { setAuth } = useContext(AuthContext);
+  const { auth, setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [errMsg, setErrMsg] = useState<string>('');
   const [formLogin, setFormLogin] = useState({
-    company: '',
+    username: '',
     password: '',
     });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,20 +21,34 @@ const LogInPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formLogin);
-    if (formLogin.company === 'VNG' && formLogin.password === '1') {
-      setAuth({token: true});
+    fetch('http://localhost:8000/login', {
+      method: 'POST',
+      body: JSON.stringify(formLogin),
+      headers: {
+        'Content-type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        setAuth({token: res["token"]});
+      })
+      .catch((e) => {
+        setErrMsg('Login Failed');
+      })
+    if (auth.token === true) {
       navigate("/home");
+    } else {
+      setErrMsg('Login Failed');
     }
-    // const { identifier, lower, upper, proof, publicSignals} = formVerify;
   }
   return (
     <div className="text-center">
       <h2 className="main-title">Sign In</h2>
       <form action="/home" onSubmit={handleSubmit} >
         <p>
-          <label>Company</label>
+          <label>Username</label>
           <br />
-          <input type="text" name="company" value={formLogin.company} onChange={handleChange} required />
+          <input type="text" name="username" value={formLogin.username} onChange={handleChange} required />
         </p>
         <p>
           <label>Password</label>
@@ -44,9 +59,11 @@ const LogInPage: React.FC = () => {
           <button id="sub_btn" type="submit">Login</button>
         </p>
       </form>
-      <footer>
-        <Link to="/"><p>Back to Homepage.</p></Link>
-      </footer>
+      {errMsg.length > 0 && (<p>{errMsg}</p>)}
+      <br/>
+      <Link to="/">
+        <button className="primary-button">Back</button>
+      </Link>
     </div>
   );
 };

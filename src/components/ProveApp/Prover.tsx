@@ -10,10 +10,9 @@ const Prover: React.FC = () => {
         lower: '',
         upper: ''
         });
+    const [msg, setMsg] = useState<string>('');
     const [proof, setProof] = useState<string>('');
     const [signals, setSignals] = useState<string>('');
-    // const wasmFile = 'http://localhost:8000/salary_js/salary.wasm';
-    // const zkeyFile = 'http://localhost:8000/salary.zkey';
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -36,10 +35,17 @@ const Prover: React.FC = () => {
             },
           })
         .then((response) => response.json())
-        .then((json) => {
-            // console.log(json);
-            setProof(JSON.stringify(JSON.stringify(json["proof"], null)));
-            setSignals(JSON.stringify(JSON.stringify(json["public"], null)));
+        .then((res) => {
+            if (res.result === true) {
+                setProof(JSON.stringify(res.proof));
+                setSignals(JSON.stringify(res.publicSignals));
+                setMsg('Successful!');
+            } else {
+                setMsg('Invalid Input');
+            }
+        })
+        .catch((err) => {
+            setMsg('Failed to connect to server!');
         });
     };
 
@@ -71,21 +77,25 @@ const Prover: React.FC = () => {
             <button id="sub_btn" type="submit">Prove</button>
             </p>
         </form>
+        {msg.length > 0 && (
+            <p>{msg}</p>
+        )}
         {proof.length > 0 && signals.length > 0 && (
             <div>
             <label style={{ color: 'white' }}>Proof and Signals</label>
             <div className= "proof" style={{padding: '10px' }}>
                 <QRCode
                 style={{ height: "auto", maxWidth: "50%", width: "50%" }}
-                value={JSON.stringify({"proof": JSON.parse(proof), "signals": JSON.parse(signals)})}
+                value={JSON.stringify({"proof": JSON.parse(proof), "publicSignals": JSON.parse(signals)})}
                 viewBox={`5 5 256 256`}
                 />
             </div>
             </div>
         )}
-        <footer>
-            <Link to="/"><p>Back to Homepage.</p></Link>
-        </footer>
+        <br/>
+        <Link to="/">
+            <button className="primary-button">Back</button>
+        </Link>
         </div>
     );
     };

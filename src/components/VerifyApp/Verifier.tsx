@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { QrReader } from 'react-qr-reader';
 import '../../App.css';
 import Scanner from './Scanner';
 
@@ -33,26 +32,26 @@ const Verifier: React.FC = () => {
       },
     })
     .then((response) => response.json())
-    .then((json) => {
-      if (json["result"] === true) {
+    .then((res) => {
+      if (res["result"] === true) {
         setIsValid(true);
-        setData(JSON.stringify(json["data"]));
+        setData(JSON.stringify(res["data"]));
       } else {
         setIsValid(false);
-        console.log(json["msg"]);
-        setErrorMsg(json["msg"]);
+        console.log(res["msg"]);
+        setErrorMsg(res["msg"]);
       }
     })
   }
 
-  const handleScan = result => {
+  const handleScan = (result: any) => {
     try {
       var proofAndSignals = JSON.parse(result);
-
+      console.log(proofAndSignals);
       setFormVerify(prevFormVerify => ({
         ...prevFormVerify,
-        proof: proofAndSignals["proof"],
-        publicSignals: proofAndSignals["signals"]
+        proof: JSON.stringify(proofAndSignals.proof),
+        publicSignals: JSON.stringify(proofAndSignals.publicSignals)
       }));
     } catch {
       setIsValid(false);
@@ -79,9 +78,7 @@ const Verifier: React.FC = () => {
       </form>
       {formVerify.proof.length > 0 && (
       <div>
-      <label style={{ color: 'white' }}>Verify Result</label>
-      <div className="verify">
-          <br />
+      <div>
           <p>{isValid ? "Valid proof" : "Invalid proof"}</p>
       </div>
       </div>
@@ -89,12 +86,12 @@ const Verifier: React.FC = () => {
       <Scanner onScan={handleScan}/>
       <p className='proof'>{data}</p>
       {errorMsg.length > 0 && (
-        <p className='proof'>{errorMsg}
-        </p>
+        <p>{errorMsg}</p>
       )}
-      <footer>
-        <Link to="/"><p>Back to Homepage.</p></Link>
-      </footer>
+      <br/>
+      <Link to="/">
+        <button className="primary-button">Back</button>
+      </Link>
     </div>
   );
 };

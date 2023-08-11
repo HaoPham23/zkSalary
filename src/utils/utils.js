@@ -1,7 +1,7 @@
 // const circom  = require('circomlibjs');
 const {snarkjs} = require("snarkjs");
 // const fs = require("fs");
-// const {MerkleTree }= require('fixed-merkle-tree')
+const {MerkleTree }= require('fixed-merkle-tree')
 export async function prove(identifier, salary, lower, upper, pathElements="", pathIndices="", root="") {
     var input = {}
     input["identifier"] = identifier;
@@ -11,7 +11,7 @@ export async function prove(identifier, salary, lower, upper, pathElements="", p
     //temporary
     // const mimc =  await circom.buildMimcSponge();
     // const mimcspongehash = (left, right) => mimc.F.toString(mimc.multiHash([left,right]));
-    // const tree = new MerkleTree(20,[],{hashFunction:mimcspongehash,zeroElement: "21663839004416932945382355908790599225266501822907911457504978515578255421292"})
+    const tree = new MerkleTree(20,[],{hashFunction:mimcspongehash,zeroElement: "21663839004416932945382355908790599225266501822907911457504978515578255421292"})
     // tree.insert("0");
     // tree.insert("1");
     // tree.insert("2");

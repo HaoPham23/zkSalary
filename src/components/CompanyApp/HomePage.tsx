@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import '../../App.css';
 
 const HomePage: React.FC = () => {
@@ -24,7 +24,7 @@ const HomePage: React.FC = () => {
         </Link>
       </div>
       <Link to="/">
-        <button className="primary-button">Log out</button>
+        <button className="primary-button">Back</button>
       </Link>
     </div>
   );
