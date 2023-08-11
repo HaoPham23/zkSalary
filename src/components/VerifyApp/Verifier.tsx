@@ -4,7 +4,7 @@ import '../../App.css';
 import Scanner from './Scanner';
 
 const Verifier: React.FC = () => {
-  const [data, setData] = useState('No result');
+  const [data, setData] = useState({});
   const [errorMsg, setErrorMsg] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [formVerify, setFormVerify] = useState({
@@ -20,13 +20,12 @@ const Verifier: React.FC = () => {
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // const { identifier, lower, upper, proof, publicSignals} = formVerify;
     const {proof, publicSignals} = formVerify;
     const _proof = JSON.parse(proof);
     const _signals = JSON.parse(publicSignals);
     fetch('http://localhost:8000/verify', {
       method: 'POST',
-      body: JSON.stringify({"proof": _proof, "signals": _signals}),
+      body: JSON.stringify({"proof": _proof, "publicSignals": _signals}),
       headers: {
         'Content-type': 'application/json',
       },
@@ -35,10 +34,9 @@ const Verifier: React.FC = () => {
     .then((res) => {
       if (res["result"] === true) {
         setIsValid(true);
-        setData(JSON.stringify(res["data"]));
+        setData(res["data"]);
       } else {
         setIsValid(false);
-        console.log(res["msg"]);
         setErrorMsg(res["msg"]);
       }
     })
@@ -84,7 +82,17 @@ const Verifier: React.FC = () => {
       </div>
         )}
       <Scanner onScan={handleScan}/>
-      <p className='proof'>{data}</p>
+      <br/>
+      {data.root !== undefined && (<table className='json-table'>
+      <tbody>
+        {Object.entries(data).map(([key, value]) => (
+          <tr key={key}>
+            <td>{key}</td>
+            <td>{value}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>)}
       {errorMsg.length > 0 && (
         <p>{errorMsg}</p>
       )}
@@ -92,6 +100,7 @@ const Verifier: React.FC = () => {
       <Link to="/">
         <button className="primary-button">Back</button>
       </Link>
+
     </div>
   );
 };

@@ -9,8 +9,8 @@ export async function prove(identifier, salary, lower, upper, pathElements="", p
     input["lower"] = lower;
     input["upper"] = upper;
     //temporary
-    // const mimc =  await circom.buildMimcSponge();
-    // const mimcspongehash = (left, right) => mimc.F.toString(mimc.multiHash([left,right]));
+    const mimc =  await circom.buildMimcSponge();
+    const mimcspongehash = (left, right) => mimc.F.toString(mimc.multiHash([left,right]));
     const tree = new MerkleTree(20,[],{hashFunction:mimcspongehash,zeroElement: "21663839004416932945382355908790599225266501822907911457504978515578255421292"})
     // tree.insert("0");
     // tree.insert("1");
