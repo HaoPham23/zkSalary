@@ -35,9 +35,11 @@ const Verifier: React.FC = () => {
       if (res["result"] === true) {
         setIsValid(true);
         setData(res["data"]);
+        alert("Valid proof");
       } else {
         setIsValid(false);
         setErrorMsg(res["msg"]);
+        alert("Invalid proof");
       }
     })
   }

@@ -3,8 +3,21 @@ const snarkjs = require('snarkjs');
 const cors = require('cors')
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const app = express()
+const app = express();
+const multer = require("multer");
+const path = require("path");
 const SalaryTree = require("./salaryTree");
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "uploads/");
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    }
+  });
+  
+const upload = multer({ storage: storage });
 
 let tree;
 async function initSalaryTree() {
@@ -13,7 +26,7 @@ async function initSalaryTree() {
 }
 
 initSalaryTree().catch((e) => {
-    console.error('Error initializing SalaryTree:', e);
+    console.error('Error initializing SalaryTree:');
 })
 
 app.use(cors())
@@ -33,27 +46,43 @@ app.post('/login', (req, res) => {
     return res.json({token: false});
 })
     // Add employee's data to csv file
-app.post('/add', async (req, res) => {
-    console.log("POST add");
-    const { fullName, identifier, salary} = req.body;
+app.post('/uploadxxx', async (req, res) => {
+    console.log("POST upload");
+    // const { fullName, identifier, salary} = req.body;
 
-    if (!fullName || !identifier || !salary) {
-      return res.json({ error: 'Invalid Input' });
-    }
-    const csvData = `${fullName},${identifier},${salary}\n`;
-    const data = fs.readFileSync('employees.csv', 'utf8');
-    if(data.includes(identifier)) {
-        return res.json({ error: "Identifier exists"});
-    }
-    fs.appendFile('employees.csv', csvData, async (err) => {
-        if (err) {
-            console.error(err);
-            return res.json({ error: 'Failed to store data.' });
-        }
-        await tree._read_from_csv();
-        return res.json({ message: 'Data stored successfully.' });
-    });
+    // if (!fullName || !identifier || !salary) {
+    //   return res.json({ error: 'Invalid Input' });
+    // }
+    // const csvData = `${fullName},${identifier},${salary}\n`;
+    // const data = fs.readFileSync('employees.csv', 'utf8');
+    // if(data.includes(identifier)) {
+    //     return res.json({ error: "Identifier exists"});
+    // }
+    // fs.appendFile('employees.csv', csvData, async (err) => {
+    //     if (err) {
+    //         console.error(err);
+    //         return res.json({ error: 'Failed to store data.' });
+    //     }
+    //     await tree._read_from_csv();
+    //     return res.json({ message: 'Data stored successfully.' });
+    // });
+    fs.readFile(req.files.file.path, function(err, data){
+        console.log(data);
+        // Do something with the data (which holds the file information)
+      });
 })
+
+app.post("/upload", upload.single("file"), (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+  
+    // Do something with the uploaded file, e.g., save it to a database or process it
+    console.log("Uploaded file:", req.file);
+    tree.setFilePath(req.file.path);
+    return res.status(200).json({ message: "File uploaded successfully" });
+  });
+
 
 // For Prover
 app.post('/proofCalculate', async (req, res) => {

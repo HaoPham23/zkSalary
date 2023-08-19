@@ -13,19 +13,20 @@ class SalaryTree {
     async create() {
         this.mimc = await circom.buildMimcSponge();
         this.hashFunction = (left, right) => this.mimc.F.toString(this.mimc.multiHash([left, right]));
-        await this._read_from_csv();
     }
 
-    static async init(levels, filePath) {
+    static async init(levels, filePath='') {
         const obj = new SalaryTree(levels, filePath);
         await obj.create();
         return obj;
     }
 
-    getRoot() {
+    getMerkleRoot() {
         return this.tree.root;
     }
-
+    setFilePath(filePath) {
+        this.filePath = filePath;
+    }
     async _read_from_csv() {
         var self = this;
         self.tree = new MerkleTree(self.levels, [],{
@@ -83,6 +84,7 @@ class SalaryTree {
     }
 
     async getProof(identifier, salary, lower, upper) {
+        await this._read_from_csv();
         if (! (identifier in this.elements)) {
             throw new Error('Not found');
         }
