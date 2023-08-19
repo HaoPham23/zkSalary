@@ -4,7 +4,7 @@ import '../../App.css';
 import Scanner from './Scanner';
 
 const Verifier: React.FC = () => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState({root: undefined});
   const [errorMsg, setErrorMsg] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [formVerify, setFormVerify] = useState({

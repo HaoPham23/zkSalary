@@ -39,7 +39,7 @@ const AppStyle = {
   background: `url(${BackgroundImage})`,
   backgroundPosition: 'center',
   backgroundSize: 'contain',
-  overflow: 'scroll'
+  overflow: 'auto'
 };
 
 export default App;
