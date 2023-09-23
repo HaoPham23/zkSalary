@@ -5,8 +5,6 @@ import Scanner from './Scanner';
 
 const Verifier: React.FC = () => {
   const [data, setData] = useState({root: undefined});
-  const [errorMsg, setErrorMsg] = useState('');
-  const [isValid, setIsValid] = useState(false);
   const [formVerify, setFormVerify] = useState({
     proof: '',
     publicSignals: '',
@@ -33,13 +31,10 @@ const Verifier: React.FC = () => {
     .then((response) => response.json())
     .then((res) => {
       if (res["result"] === true) {
-        setIsValid(true);
         setData(res["data"]);
         alert("Valid proof");
       } else {
-        setIsValid(false);
-        setErrorMsg(res["msg"]);
-        alert("Invalid proof");
+        alert(res["msg"]);
       }
     })
   }
@@ -54,7 +49,6 @@ const Verifier: React.FC = () => {
         publicSignals: JSON.stringify(proofAndSignals.publicSignals)
       }));
     } catch {
-      setIsValid(false);
     }
   };
 
@@ -76,13 +70,6 @@ const Verifier: React.FC = () => {
           <button id="sub_btn" type="submit">Verify</button>
         </p>
       </form>
-      {formVerify.proof.length > 0 && (
-      <div>
-      <div>
-          <p>{isValid ? "Valid proof" : "Invalid proof"}</p>
-      </div>
-      </div>
-        )}
       <Scanner onScan={handleScan}/>
       <br/>
       {data.root !== undefined && (<table className='json-table'>
@@ -95,9 +82,6 @@ const Verifier: React.FC = () => {
         ))}
       </tbody>
     </table>)}
-      {errorMsg.length > 0 && (
-        <p>{errorMsg}</p>
-      )}
       <br/>
       <Link to="/">
         <button className="primary-button">Back</button>

@@ -9,17 +9,7 @@ const HomePage: React.FC = () => {
       <div className="buttons text-center">
         <Link to="add">
           <button className="primary-button" id="reg_btn">
-            <span>add </span>
-          </button>
-        </Link>
-        <Link to="remove">
-          <button className="primary-button" id="reg_btn">
-            <span>remove </span>
-          </button>
-        </Link>
-        <Link to="view">
-          <button className="primary-button" id="reg_btn">
-            <span>view </span>
+            <span>Upload payrolls</span>
           </button>
         </Link>
       </div>

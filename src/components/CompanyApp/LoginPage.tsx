@@ -6,7 +6,6 @@ import '../../App.css';
 const LogInPage: React.FC = () => {
   const { auth, setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [errMsg, setErrMsg] = useState<string>('');
   const [formLogin, setFormLogin] = useState({
     username: '',
     password: '',
@@ -33,12 +32,12 @@ const LogInPage: React.FC = () => {
         setAuth({token: res["token"]});
       })
       .catch((e) => {
-        setErrMsg('Login Failed');
+        alert('Login Failed');
       })
     if (auth.token === true) {
       navigate("/home");
     } else {
-      setErrMsg('Login Failed');
+      alert('Login Failed');
     }
   }
   return (
@@ -59,7 +58,6 @@ const LogInPage: React.FC = () => {
           <button id="sub_btn" type="submit">Login</button>
         </p>
       </form>
-      {errMsg.length > 0 && (<p>{errMsg}</p>)}
       <br/>
       <Link to="/">
         <button className="primary-button">Back</button>

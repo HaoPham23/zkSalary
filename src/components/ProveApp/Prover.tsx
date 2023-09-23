@@ -10,7 +10,6 @@ const Prover: React.FC = () => {
         lower: '',
         upper: ''
         });
-    const [msg, setMsg] = useState<string>('');
     const [proof, setProof] = useState<string>('');
     const [signals, setSignals] = useState<string>('');
     
@@ -39,13 +38,13 @@ const Prover: React.FC = () => {
             if (res.result === true) {
                 setProof(JSON.stringify(res.proof));
                 setSignals(JSON.stringify(res.publicSignals));
-                setMsg('Successful!');
+                alert('Successful!');
             } else {
-                setMsg('Invalid Input');
+                alert('Invalid Input');
             }
         })
         .catch((err) => {
-            setMsg('Failed to connect to server!');
+            alert('Failed to connect to server!');
         });
     };
 
@@ -77,9 +76,6 @@ const Prover: React.FC = () => {
             <button id="sub_btn" type="submit">Prove</button>
             </p>
         </form>
-        {msg.length > 0 && (
-            <p>{msg}</p>
-        )}
         {proof.length > 0 && signals.length > 0 && (
             <div>
             <label style={{ color: 'white' }}>Proof and Signals</label>

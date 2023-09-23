@@ -11,17 +11,17 @@ function LandingPage() {
       <div className="buttons text-center">
         <Link to="/login">
           <button className="primary-button" id="reg_btn">
-            <span>log in </span>
+            <span>Employer's App</span>
           </button>
         </Link>
         <Link to="/prove">
           <button className="primary-button" id="reg_btn">
-            <span>prove </span>
+            <span>Employee's App</span>
           </button>
         </Link>
         <Link to="/verify">
           <button className="primary-button" id="reg_btn">
-            <span>verify </span>
+            <span>Verifier's App</span>
           </button>
         </Link>
       </div>
