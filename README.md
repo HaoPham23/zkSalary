@@ -1,7 +1,7 @@
 Advisors: Nguyen Duy Hieu, Nguyen Anh Khoa
 
 # zkSalary: A Privacy-Preserving System for Salary Verification Using zk-SNARK
-The **zkSalary** system provides a secure, transparent and privacy-enhancing solution for both employers and employees without revealing sensitive salary details during the verification process. The proofs can be generated within a few seconds and succint to transfer to the verifier via plaintext or QR code.
+The **zkSalary** system provides a secure, transparent and privacy-enhancing solution for both employers and employees without revealing sensitive salary details during the verification process. The proofs can be generated within a few seconds and succint to transfer to the verifier via plaintext or QR code. You can read a detail report [here](https://github.com/HaoPham23/zkSalary/blob/main/report.pdf).
 
 # System Architecture
 
